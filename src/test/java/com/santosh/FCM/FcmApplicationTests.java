@@ -1,10 +1,10 @@
-package com.santosh.foodcourtmanagement;
+package com.santosh.FCM;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FoodcourtmanagementApplicationTests {
+class FcmApplicationTests {
 
 	@Test
 	void contextLoads() {

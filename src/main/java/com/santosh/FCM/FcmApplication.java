@@ -1,13 +1,13 @@
-package com.santosh.foodcourtmanagement;
+package com.santosh.FCM;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FoodcourtmanagementApplication {
+public class FcmApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FoodcourtmanagementApplication.class, args);
+		SpringApplication.run(FcmApplication.class, args);
 	}
 
 }
