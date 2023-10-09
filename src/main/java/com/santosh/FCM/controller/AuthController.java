@@ -3,6 +3,7 @@ package com.santosh.FCM.controller;
 import com.santosh.FCM.model.Response;
 import com.santosh.FCM.model.User;
 import com.santosh.FCM.repo.UserRepo;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,25 +25,26 @@ public class AuthController {
     @Autowired
     private UserRepo userRepo;
     @GetMapping("/")
+    @Hidden
     public void redirect(HttpServletResponse res) throws IOException {
         res.sendRedirect("/swagger-ui/index.html");
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user) {
+    public ResponseEntity<Response> register(@RequestBody User user) {
         // Check if the user with the given email already exists
         Optional<User> existingUser = userRepo.findByEmail(user.getEmail());
 
         if (existingUser.isPresent()) {
             // If the user already exists, return an error response
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("User with this email already exists");
+                    .body(new Response<User>(false,null,"User with this email already exists"));
         } else {
             // If the user does not exist, proceed with registration
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             User savedUser = userRepo.save(user);
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("User registered successfully");
+                    .body(new Response<User>(true,savedUser,"User registered successfully"));
         }
     }
 
