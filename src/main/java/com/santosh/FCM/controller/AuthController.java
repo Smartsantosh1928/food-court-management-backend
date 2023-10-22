@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -55,6 +56,21 @@ public class AuthController {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (bCryptPasswordEncoder.matches(userLoginRequest.getPassword(), user.getPassword()))
+                return ResponseEntity.ok(new Response<User>(true,user,"Login successful"));
+            else
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response<User>(false,null,"Invalid Credentials!"));
+        }
+        else
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response<User>(false,null,"User not Found!"));
+    }
+
+    @PostMapping("/auto-login")
+    public ResponseEntity<Response<User>> autoLogin(@RequestBody User userLoginRequest) {
+        Optional<User> userOptional = userRepo.findByEmail(userLoginRequest.getEmail());
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (Objects.equals(userLoginRequest.getPassword(), user.getPassword()))
                 return ResponseEntity.ok(new Response<User>(true,user,"Login successful"));
             else
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response<User>(false,null,"Invalid Credentials!"));

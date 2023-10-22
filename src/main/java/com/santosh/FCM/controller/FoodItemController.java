@@ -4,6 +4,8 @@ import com.santosh.FCM.model.FoodItem;
 import com.santosh.FCM.model.Response;
 import com.santosh.FCM.repo.FoodItemRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +34,20 @@ public class FoodItemController {
         }
     }
 
+    @GetMapping("/getbypage/{page}/{size}")
+    public ResponseEntity<Page<FoodItem>> getItems(@PathVariable int page, @PathVariable int size) {
+        Page<FoodItem> items = foodItemRepo.findAll(PageRequest.of(page, size));
+        return new ResponseEntity<>(items, HttpStatus.OK);
+    }
+
     @GetMapping("/get/{category}")
     public Iterable<FoodItem> getFoodItem(@PathVariable String category){
         return foodItemRepo.findAllByCategory(category).get();
+    }
+
+    @GetMapping("/getById/{id}")
+    public FoodItem getFoodItemById(@PathVariable String id){
+        return foodItemRepo.findById(id).get();
     }
 
     @GetMapping("/getall")
